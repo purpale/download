@@ -1,29 +1,34 @@
-name: Release Workflow
+name: Android CI
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-   
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Downloading...
+      run: curl -o 1.txt https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=2300958&key=7a581f38888d332e81fa982604f240c465b18de7
+    - name: Checkout Code
+      run: ls
 
-      - name: Build Project
-        run: echo "Building project..." > Release.txt
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            Release.txt
-            LICENSE
-          tag_name: ${{ github.ref_name }}  # 使用推送的标签作为版本号
-          name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+    - name: Create Release and Upload APK
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用GitHub提供的默认Token
+      run: |
+          TAG_NAME=${{ github.ref_name }}
+          RELEASE_NAME="Release $TAG_NAME"
+          APK_PATH="1.txt"  # APK路径，根据项目结构调整
+          if ! gh release view $TAG_NAME > /dev/null 2>&1; then
+            gh release create "$TAG_NAME" "$APK_PATH" \
+              --title "$RELEASE_NAME" \
+              --notes "APK for version $TAG_NAME"
+          else
+            gh release upload "$TAG_NAME" "$APK_PATH" --clobber
+          fi
