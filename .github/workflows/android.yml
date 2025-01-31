@@ -1,18 +1,29 @@
-name: Android CI
+name: Release Workflow
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+   
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Downloading...
-      run: curl -O https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=2300958&key=7a581f38888d332e81fa982604f240c465b18de7
-    - name: Checkout Code
-      run: ls
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Project
+        run: echo "Building project..." > Release.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            Release.txt
+            LICENSE
+          tag_name: ${{ github.ref_name }}  # 使用推送的标签作为版本号
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
