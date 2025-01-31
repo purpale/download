@@ -2,9 +2,10 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+        -main
+    paths:
+        -'.github/workflow/android.yml'
 
 jobs:
   build:
@@ -16,6 +17,14 @@ jobs:
       run: curl -o 1.txt https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=2300958&key=7a581f38888d332e81fa982604f240c465b18de7
     - name: Checkout Code
       run: ls
+      
+    - name: Copy APK to Project Directory
+      run: |
+          APK_SOURCE_PATH="1.txt"
+          APK_DEST_PATH="p/1.txt"
+          mkdir -p "$(dirname $APK_DEST_PATH)"
+          cp "$APK_SOURCE_PATH" "$APK_DEST_PATH"
+          echo "APK copied to $APK_DEST_PATH"
 
 
     - name: Copying
