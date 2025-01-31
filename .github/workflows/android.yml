@@ -12,5 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Grant execute permission for gradlew
+    - name: Downloading...
       run: curl -O https://www.apkmirror.com/wp-content/themes/APKMirror/download.php?id=2300958&key=7a581f38888d332e81fa982604f240c465b18de7
+    - name: Checkout Code
+      run: ls
