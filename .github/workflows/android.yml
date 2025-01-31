@@ -18,17 +18,5 @@ jobs:
       run: ls
 
 
-    - name: Create Release and Upload APK
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用GitHub提供的默认Token
-      run: |
-          TAG_NAME=${{ github.ref_name }}
-          RELEASE_NAME="Release $TAG_NAME"
-          APK_PATH="1.txt"  # APK路径，根据项目结构调整
-          if ! gh release view $TAG_NAME > /dev/null 2>&1; then
-            gh release create "$TAG_NAME" "$APK_PATH" \
-              --title "$RELEASE_NAME" \
-              --notes "APK for version $TAG_NAME"
-          else
-            gh release upload "$TAG_NAME" "$APK_PATH" --clobber
-          fi
+    - name: Copying
+      run: cp 1.txt p/1.txt
